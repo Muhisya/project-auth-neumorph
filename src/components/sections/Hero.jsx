@@ -1,13 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useReveal } from "@/hooks/useReveal";
 import {
-  PlayIcon, SkipBackIcon, SkipForwardIcon, HeartIcon,
+  PlayIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+  HeartIcon,
 } from "lucide-react";
 
 export default function HeroSection() {
+  const { ref, shown } = useReveal();
+
   return (
-    <section id="home" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 pt-10 md:px-6">
+    <section
+      id="home"
+      ref={ref}
+      className={`mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 md:px-6 ${
+        shown
+          ? "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-6 motion-safe:duration-700"
+          : "opacity-0"
+      }`}
+    >
       <Card className="overflow-hidden py-0">
         <CardContent className="grid items-center gap-0 p-0 lg:grid-cols-2">
           {/* ===== Left: copy ===== */}
@@ -17,7 +31,8 @@ export default function HeroSection() {
             </span>
 
             <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-              Interfaces carved<br className="hidden md:block" /> from clay
+              Interfaces carved
+              <br className="hidden md:block" /> from clay
             </h1>
 
             <p className="text-muted-foreground">
@@ -28,7 +43,9 @@ export default function HeroSection() {
 
             <div className="mt-2 flex flex-wrap gap-3">
               <Button size="lg">Get Started</Button>
-              <Button size="lg" variant="outline">Learn More</Button>
+              <Button size="lg" variant="outline">
+                Learn More
+              </Button>
             </div>
           </div>
 
@@ -75,8 +92,12 @@ export default function HeroSection() {
 
               {/* flat vs soft pill toggle */}
               <div className="absolute bottom-6 z-10 flex items-center rounded-full bg-card p-1.5 shadow-neu-inset-sm">
-                <span className="rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground">Flat</span>
-                <span className="rounded-full bg-card px-4 py-1.5 text-xs font-medium text-primary shadow-neu-xs">Soft</span>
+                <span className="rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground">
+                  Flat
+                </span>
+                <span className="rounded-full bg-card px-4 py-1.5 text-xs font-medium text-primary shadow-neu-xs">
+                  Soft
+                </span>
               </div>
             </div>
           </AspectRatio>

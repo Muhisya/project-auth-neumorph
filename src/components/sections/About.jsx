@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useReveal } from "@/hooks/useReveal";
 import {
   ZapIcon, PuzzleIcon, LayersIcon, MoonIcon, Volume2Icon,
 } from "lucide-react";
@@ -12,8 +13,18 @@ const FEATURES = [
 ];
 
 export default function AboutSection() {
+  const { ref, shown } = useReveal();
+
   return (
-    <section id="about" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 md:px-6">
+    <section
+      id="about"
+      ref={ref}
+      className={`mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 md:px-6 ${
+        shown
+          ? "motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-6 motion-safe:duration-700"
+          : "opacity-0"
+      }`}
+    >
       <Card className="overflow-hidden py-0">
         <CardContent className="grid items-center gap-0 p-0 lg:grid-cols-2">
           {/* ===== Left: soft-UI composition ===== */}
@@ -89,7 +100,10 @@ export default function AboutSection() {
             {/* debossed wells with raised icon pebbles */}
             <ul className="grid gap-3 sm:grid-cols-2">
               {FEATURES.map(({ icon: Icon, title, desc }) => (
-                <li key={title} className="flex items-start gap-3 rounded-2xl bg-card p-4 shadow-neu-inset-sm">
+                <li
+                  key={title}
+                  className="flex items-start gap-3 rounded-2xl bg-card p-4 shadow-neu-inset-sm"
+                >
                   <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-card text-primary shadow-neu-xs">
                     <Icon className="size-4" />
                   </span>
