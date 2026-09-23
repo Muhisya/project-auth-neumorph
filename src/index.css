@@ -1,0 +1,228 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Neumorphic shadow utilities → shadow-neu, shadow-neu-sm, shadow-neu-inset... */
+  --shadow-neu-xs: 2px 2px 5px var(--neu-dark), -2px -2px 5px var(--neu-light);
+  --shadow-neu-sm: 4px 4px 10px var(--neu-dark), -4px -4px 10px var(--neu-light);
+  --shadow-neu: 9px 9px 18px var(--neu-dark), -9px -9px 18px var(--neu-light);
+  --shadow-neu-lg: 16px 16px 32px var(--neu-dark), -16px -16px 32px var(--neu-light);
+  --shadow-neu-inset-sm: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+  --shadow-neu-inset: inset 6px 6px 12px var(--neu-dark), inset -6px -6px 12px var(--neu-light);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 1rem;
+  /* the two light sources that create the "soft" illusion */
+  --neu-light: oklch(1 0 0 / 0.9);
+  --neu-dark: oklch(0.74 0.03 260 / 0.55);
+
+  --background: oklch(0.925 0.012 260);      /* soft grey-blue #e0e5ec */
+  --foreground: oklch(0.36 0.03 260);
+  --card: oklch(0.925 0.012 260);            /* SAME as bg — crucial for neumorphism */
+  --card-foreground: oklch(0.36 0.03 260);
+  --popover: oklch(0.925 0.012 260);
+  --popover-foreground: oklch(0.36 0.03 260);
+  --primary: oklch(0.56 0.14 277);           /* soft indigo */
+  --primary-foreground: oklch(0.97 0.005 260);
+  --secondary: oklch(0.925 0.012 260);
+  --secondary-foreground: oklch(0.36 0.03 260);
+  --muted: oklch(0.9 0.014 260);
+  --muted-foreground: oklch(0.5 0.025 260);
+  --accent: oklch(0.895 0.015 260);
+  --accent-foreground: oklch(0.36 0.03 260);
+  --destructive: oklch(0.58 0.19 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0.015 260 / 0.5);
+  --input: oklch(0.85 0.015 260 / 0.5);
+  --ring: oklch(0.56 0.14 277);
+}
+
+.dark {
+  color-scheme: dark;
+  --neu-light: oklch(0.36 0.014 260 / 0.7);
+  --neu-dark: oklch(0.12 0.01 260 / 0.8);
+
+  --background: oklch(0.255 0.012 260);      /* #2b303b-ish */
+  --foreground: oklch(0.88 0.012 260);
+  --card: oklch(0.255 0.012 260);
+  --card-foreground: oklch(0.88 0.012 260);
+  --popover: oklch(0.255 0.012 260);
+  --popover-foreground: oklch(0.88 0.012 260);
+  --primary: oklch(0.68 0.13 277);
+  --primary-foreground: oklch(0.2 0.03 277);
+  --secondary: oklch(0.28 0.012 260);
+  --secondary-foreground: oklch(0.88 0.012 260);
+  --muted: oklch(0.29 0.012 260);
+  --muted-foreground: oklch(0.68 0.015 260);
+  --accent: oklch(0.31 0.014 260);
+  --accent-foreground: oklch(0.88 0.012 260);
+  --destructive: oklch(0.62 0.18 22);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.34 0.012 260 / 0.6);
+  --input: oklch(0.34 0.012 260 / 0.6);
+  --ring: oklch(0.68 0.13 277);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-background text-foreground antialiased; }
+}
+
+/* image sitting in an inset "well" — classic neumorphism */
+.neu-well {
+  background: var(--background);
+  border-radius: calc(var(--radius) * 1.6);
+  box-shadow: inset 6px 6px 12px var(--neu-dark), inset -6px -6px 12px var(--neu-light);
+  padding: 0.75rem;
+}
+.neu-well img { border-radius: calc(var(--radius) * 1.2); }
+
+/* ===== Auto-restyle every shadcn primitive (they all have data-slot attrs) =====
+   Unlayered ON PURPOSE: beats Tailwind's utility layer, so cards/inputs/buttons
+   become soft-UI without editing each ui/*.jsx file. */
+[data-slot="card"] {
+  border: 0;
+  border-radius: calc(var(--radius) * 1.5);
+  background: var(--card);
+  box-shadow: 9px 9px 18px var(--neu-dark), -9px -9px 18px var(--neu-light);
+}
+
+[data-slot="input"] {
+  border: 0;
+  outline: none;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+  transition: box-shadow 0.2s ease;
+}
+[data-slot="input"]:focus-visible {
+  box-shadow:
+    inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light),
+    0 0 0 3px color-mix(in oklab, var(--ring) 45%, transparent);
+}
+
+[data-slot="button"] {
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: 3px 3px 7px var(--neu-dark), -3px -3px 7px var(--neu-light);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+[data-slot="button"]:hover {
+  box-shadow: 5px 5px 10px var(--neu-dark), -5px -5px 10px var(--neu-light);
+}
+[data-slot="button"]:active {
+  box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+  transform: scale(0.98);
+}
+[data-slot="button"]:focus-visible {
+  box-shadow: 3px 3px 7px var(--neu-dark), -3px -3px 7px var(--neu-light),
+    0 0 0 3px color-mix(in oklab, var(--ring) 45%, transparent);
+}
+
+/* keep text-only buttons flat (match on unique classes inside button.jsx) */
+[data-slot="button"][class*="hover:underline"],          /* variant="link" */
+[data-slot="button"][class*="dark:hover:bg-accent/50"] { /* variant="ghost" */
+  box-shadow: none;
+}
+[data-slot="button"][class*="dark:hover:bg-accent/50"]:hover {
+  box-shadow: 2px 2px 5px var(--neu-dark), -2px -2px 5px var(--neu-light);
+}
+
+[data-slot="avatar"] {
+  border-radius: 9999px;
+  box-shadow: 3px 3px 7px var(--neu-dark), -3px -3px 7px var(--neu-light);
+}
+
+[data-slot="dropdown-menu-content"],
+[data-slot="sheet-content"] {
+  border: 0;
+  border-radius: calc(var(--radius) * 1.25);
+  box-shadow: 10px 10px 20px var(--neu-dark), -10px -10px 20px var(--neu-light);
+}
+
+[data-slot="separator"] {
+  background: color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+[data-slot="accordion-trigger"] { border-radius: var(--radius); }
+
+/* ===== Neumorphic custom cursor ===== */
+.neu-cursor-dot,
+.neu-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 9999px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* the dot: a soft primary-colored pebble */
+.neu-cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  box-shadow: 2px 2px 4px var(--neu-dark), -2px -2px 4px var(--neu-light);
+}
+
+/* the ring: extruded like a neumorphic card */
+.neu-cursor-ring {
+  width: 40px;
+  height: 40px;
+  background: color-mix(in oklab, var(--background) 55%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: 4px 4px 10px var(--neu-dark), -4px -4px 10px var(--neu-light);
+  transition: box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* hovering something clickable → tint it */
+.neu-cursor-ring.is-hover {
+  background: color-mix(in oklab, var(--primary) 14%, var(--background));
+  border-color: color-mix(in oklab, var(--primary) 40%, transparent);
+}
+
+/* mouse down → pressed IN (matches your buttons) */
+.neu-cursor-ring.is-pressed {
+  box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+}
+
+/* hide the native cursor, but ONLY on real mouse devices */
+@media (hover: hover) and (pointer: fine) {
+  html.has-neu-cursor,
+  html.has-neu-cursor * {
+    cursor: none !important;
+  }
+}
