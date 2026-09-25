@@ -61,7 +61,7 @@ export default function TestimonySection() {
       <div className="relative overflow-hidden rounded-[2rem] px-5 py-12 md:px-12 md:py-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -top-24 size-72 rounded-full"
+          className="pointer-events-none absolute -right-16 -top-24 size-72 rounded-full bg-primary/5 blur-3xl"
         />
         <div
           aria-hidden="true"
