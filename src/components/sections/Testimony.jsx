@@ -58,14 +58,14 @@ export default function TestimonySection() {
           : "opacity-0"
       }`}
     >
-      <div className="relative overflow-hidden rounded-[2rem] bg-muted/30 px-5 py-12 md:px-12 md:py-16">
+      <div className="relative overflow-hidden rounded-[2rem] px-5 py-12 md:px-12 md:py-16">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -top-24 size-72 rounded-full bg-primary/5 blur-3xl"
+          className="pointer-events-none absolute -right-16 -top-24 size-72 rounded-full"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-primary/5 blur-3xl"
+          className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full"
         />
 
         <header className="relative mx-auto mb-10 max-w-2xl text-center md:mb-12">
@@ -86,7 +86,7 @@ export default function TestimonySection() {
         <Carousel
           opts={{ align: "start", loop: true }}
           aria-label="Developer testimonials"
-          className="relative mx-auto w-full max-w-5xl px-8 sm:px-10"
+          className="relative mx-auto w-full max-w-6xl px-10 sm:px-10"
         >
           <CarouselContent className="ml-1 py-4">
             {TESTIMONIALS.map((testimonial) => (
@@ -94,7 +94,7 @@ export default function TestimonySection() {
                 key={testimonial.name}
                 className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3"
               >
-                <Card className="group h-full rounded-2xl border border-border/60 bg-background/90 shadow-neu transition-all duration-300 hover:-translate-y-1 hover:shadow-neu-lg">
+                <Card className="group h-full rounded-2xl border border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-neu-lg">
                   <CardContent className="flex h-full min-h-64 flex-col p-6 sm:p-7">
                     <span
                       aria-hidden="true"
