@@ -13,6 +13,7 @@ import UserHome from "./pages/user/UserHome";
 import UserProfile from "./pages/user/UserProfile";
 import NeuCursor from "./components/NeuCursor";
 import { RequireUser, RequireAdmin, GuestOnly } from "./components/RouteGuards";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
 
         {/* old member URL → new member area (optional safety net) */}
         <Route path="/dashboard" element={<Navigate to="/user" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
