@@ -18,6 +18,7 @@ const publicUser = (u) => ({
   email: u.email,
   role: u.role ?? "user",
   createdAt: u.createdAt,
+  bio: u.bio ?? null,
 });
 
 export const useAuth = create(
@@ -68,6 +69,16 @@ export const useAuth = create(
               : u
           ),
           user: { ...current, username: username || current.username },
+        }));
+        return { ok: true };
+      },
+
+      updateBio: (bio) => {
+        const current = get().user;
+        if (!current) return { ok: false, error: "Not signed in." };
+        set((s) => ({
+          users: s.users.map((u) => (u.id === current.id ? { ...u, bio } : u)),
+          user: { ...current, bio },
         }));
         return { ok: true };
       },

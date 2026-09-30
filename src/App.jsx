@@ -11,16 +11,16 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
 import UserHome from "./pages/user/UserHome";
 import UserProfile from "./pages/user/UserProfile";
+import UserBio from "./pages/user/UserBio";
+import NotFound from "./pages/NotFound";
 import NeuCursor from "./components/NeuCursor";
 import { RequireUser, RequireAdmin, GuestOnly } from "./components/RouteGuards";
-import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
     <>
       <NeuCursor />
       <Routes>
-        {/* Layout A — auth (logged-out only) */}
         <Route element={<AuthLayout />}>
           <Route element={<GuestOnly />}>
             <Route path="/sign-in" element={<SignIn />} />
@@ -28,20 +28,18 @@ export default function App() {
           </Route>
         </Route>
 
-        {/* Layout B — guest (public) */}
         <Route element={<GuestLayout />}>
           <Route path="/" element={<Home />} />
         </Route>
 
-        {/* Layout C — user (member area, protected) */}
         <Route element={<UserLayout />}>
           <Route element={<RequireUser />}>
             <Route path="/user" element={<UserHome />} />
+            <Route path="/user/bio" element={<UserBio />} />
             <Route path="/user/profile" element={<UserProfile />} />
           </Route>
         </Route>
 
-        {/* Layout D — admin (role-protected) */}
         <Route element={<AdminLayout />}>
           <Route element={<RequireAdmin />}>
             <Route path="/admin" element={<AdminDashboard />} />
@@ -50,8 +48,10 @@ export default function App() {
           </Route>
         </Route>
 
-        {/* old member URL → new member area (optional safety net) */}
+        {/* old member URL → new member area */}
         <Route path="/dashboard" element={<Navigate to="/user" replace />} />
+
+        {/* 404 — must stay last */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

@@ -4,27 +4,38 @@ import { useAuth } from "@/store/auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Sheet, SheetContent, SheetTitle, SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
-  UserIcon, SettingsIcon, GlobeIcon, LogOutIcon,
-  MenuIcon, MoonIcon, SunIcon,
+  UserIcon,
+  SettingsIcon,
+  GlobeIcon,
+  LogOutIcon,
+  MenuIcon,
+  MoonIcon,
+  SunIcon,
+  IdCardIcon,
 } from "lucide-react";
 
 const LINKS = [
   { to: "/user", end: true, icon: UserIcon, label: "My Space" },
+  { to: "/user/bio", icon: IdCardIcon, label: "Bio / Detail User" },
   { to: "/user/profile", icon: SettingsIcon, label: "Profile" },
 ];
 
-function UserNavItem({ to, end, icon: Icon, label }) {
+function UserNavItem({ to, end, icon: Icon, label, onNavigate }) {
   return (
     <NavLink
       to={to}
       end={end}
+      onClick={onNavigate}
       className={({ isActive }) =>
         `flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
           isActive
-            ? "shadow-neu-inset-sm text-primary"      // pressed-in when active
+            ? "shadow-neu-inset-sm text-primary" // pressed-in when active
             : "text-muted-foreground hover:text-foreground"
         }`
       }
@@ -39,7 +50,10 @@ export default function UserLayout() {
   const user = useAuth((s) => s.user);
   const signOut = useAuth((s) => s.signOut);
   const navigate = useNavigate();
-  const [dark, setDark] = useState(false);
+  // initialize from the DOM so the icon matches reality (e.g. dark was already on)
+  const [dark, setDark] = useState(() =>
+    document.documentElement.classList.contains("dark"),
+  );
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleTheme = () => {
@@ -58,7 +72,10 @@ export default function UserLayout() {
     <div className="flex min-h-svh">
       {/* ===== Sidebar (desktop) ===== */}
       <aside className="sticky top-0 hidden h-svh w-64 flex-col gap-2 border-r p-4 md:flex">
-        <Link to="/user" className="mb-4 flex items-center gap-2 px-2 text-lg font-bold">
+        <Link
+          to="/user"
+          className="mb-4 flex items-center gap-2 px-2 text-lg font-bold"
+        >
           <span className="grid size-9 place-items-center rounded-full bg-card text-primary shadow-neu-xs">
             <UserIcon className="size-4" />
           </span>
@@ -68,16 +85,22 @@ export default function UserLayout() {
           </span>
         </Link>
 
-        {LINKS.map((l) => <UserNavItem key={l.to} {...l} />)}
+        {LINKS.map((l) => (
+          <UserNavItem key={l.to} {...l} />
+        ))}
 
         <div className="mt-auto space-y-2">
           <Button variant="ghost" asChild className="w-full justify-start">
-            <Link to="/"><GlobeIcon /> View site</Link>
+            <Link to="/">
+              <GlobeIcon /> View site
+            </Link>
           </Button>
 
           <div className="neu-well flex items-center gap-3">
             <Avatar className="size-9">
-              <AvatarImage src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.email}`} />
+              <AvatarImage
+                src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.email}`}
+              />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
@@ -90,8 +113,10 @@ export default function UserLayout() {
 
           <div className="flex gap-2">
             <Button
-              variant="ghost" size="icon"
-              onClick={toggleTheme} aria-label="Toggle theme"
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
               className="shrink-0"
             >
               {dark ? <SunIcon /> : <MoonIcon />}
@@ -119,10 +144,20 @@ export default function UserLayout() {
           </Link>
 
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
               {dark ? <SunIcon /> : <MoonIcon />}
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Sign out">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+            >
               <LogOutIcon />
             </Button>
 
@@ -135,14 +170,22 @@ export default function UserLayout() {
               <SheetContent side="left">
                 <SheetTitle className="flex items-center gap-2">
                   <Avatar className="size-8">
-                    <AvatarImage src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.email}`} />
+                    <AvatarImage
+                      src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.email}`}
+                    />
                     <AvatarFallback>{initials}</AvatarFallback>
                   </Avatar>
                   {user?.username}
                 </SheetTitle>
 
                 <nav className="mt-6 flex flex-col gap-1">
-                  {LINKS.map((l) => <UserNavItem key={l.to} {...l} />)}
+                  {LINKS.map((l) => (
+                    <UserNavItem
+                      key={l.to}
+                      {...l}
+                      onNavigate={() => setMenuOpen(false)}
+                    />
+                  ))}
                   <Button variant="ghost" asChild className="justify-start">
                     <Link to="/" onClick={() => setMenuOpen(false)}>
                       <GlobeIcon /> View site

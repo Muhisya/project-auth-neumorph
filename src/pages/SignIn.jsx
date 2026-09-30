@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { Button } from "@/components/ui/button";
@@ -6,23 +6,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function SignIn() {
-  const { signIn } = useAuth();
+  const signIn = useAuth((s) => s.signIn);
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
 
-  const setField = (field) => (e) =>
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm({
+    mode: "onChange", // validate while typing → isValid stays live
+    defaultValues: { email: "", password: "" }, // requirement #2
+  });
 
-function handleSubmit(e) {
-  e.preventDefault();
-  setError("");
-
-  const result = useAuth.getState().signIn(form);
-  if (!result.ok) return setError(result.error);
-
-  navigate(result.user.role === "admin" ? "/admin" : "/user", { replace: true });
-}
+  const onSubmit = (data) => {
+    const result = signIn(data);
+    if (!result.ok) {
+      setError("password", { type: "server", message: result.error });
+      return;
+    }
+    navigate(result.user.role === "admin" ? "/admin" : "/user", {
+      replace: true,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -31,38 +37,60 @@ function handleSubmit(e) {
         <p className="text-sm text-muted-foreground">Sign in to your account</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
-            className="p-3"
             id="email"
             type="email"
+            className="p-3"
             placeholder="name@example.com"
-            value={form.email}
-            onChange={setField("email")}
-            required
+            aria-invalid={!!errors.email}
+            {...register("email", {
+              required: "Email is required.",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email address.",
+              },
+            })}
           />
+          {errors.email && (
+            <p className="text-sm font-medium text-destructive">
+              {errors.email.message}
+            </p>
+          )}
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <Input
-            className="p-3"
             id="password"
             type="password"
-            value={form.password}
-            onChange={setField("password")}
-            required
+            className="p-3"
+            aria-invalid={!!errors.password}
+            {...register("password", {
+              required: "Password is required.",
+              minLength: {
+                value: 6,
+                message: "Password is at least 6 characters.",
+              },
+            })}
           />
+          {errors.password && (
+            <p className="text-sm font-medium text-destructive">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        {error && (
-          <p className="text-sm font-medium text-destructive">{error}</p>
-        )}
-
-        <Button type="submit" className="w-full">
-          Sign-In
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!isValid || isSubmitting}
+        >
+          {isSubmitting ? "Signing in..." : "Sign-In"}
         </Button>
+
         <Button type="button" variant="outline" asChild className="w-full">
           <Link to="/sign-up">Signup</Link>
         </Button>
